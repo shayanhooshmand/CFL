@@ -1,17 +1,17 @@
+/**
+ * A GUI to easily interact with a CFLGenerator object and generate
+ * random sentences
+ *
+ * @author Shayan Hooshmand
+ */
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MyGUI {
-
-    private JFrame frame;
-    private JPanel intro, activity, advanced;
-    private String userNouns, userVerbs, userPreps, userArticles;
-    private CFLGenerator grammar;
-
 
     public MyGUI() {
 
@@ -29,6 +29,15 @@ public class MyGUI {
 
     }
 
+    // *************************************************
+    // PRIVATE METHODS
+    // *************************************************
+
+    /**
+     *
+     * Creates the top pane of the window with introductory background
+     *
+     */
     private void createIntroPanel() {
         intro = new JPanel();
 
@@ -41,6 +50,12 @@ public class MyGUI {
 
     }
 
+    /**
+     *
+     * Creates the middle pane of the window where a user can input their
+     * own words to be randomly generated
+     *
+     */
     private void createActivityPanel() {
         activity = new JPanel();
 
@@ -65,7 +80,7 @@ public class MyGUI {
                 userVerbs = verbs.getText();
                 userPreps = prepositions.getText();
                 userArticles = articles.getText();
-                grammar = new CFLGenerator(userNouns, userVerbs, userPreps, userArticles);
+                grammar.updateWords(userNouns, userVerbs, userPreps, userArticles);
                 sentence.setText(grammar.generate());
 
             }
@@ -86,6 +101,12 @@ public class MyGUI {
         frame.add(activity, BorderLayout.CENTER);
     }
 
+    /**
+     *
+     * Creates the pop-up dialog where users can edit the grammar rules of
+     * their language
+     *
+     */
     private void createAdvancedDialog() {
 
         JButton adv = new JButton("Advanced");
@@ -98,7 +119,7 @@ public class MyGUI {
                 String[] nonterminalNames = grammar.expNonterminals();
                 String[] defaultRules = grammar.expDefaultRules();
 
-                JTextField[] inputs = new JTextField[nonterminalNames.length];
+                JTextField[] inputs = new JTextField[6];
                 for(int i = 0; i < inputs.length; i++) {
                     inputs[i] = new JTextField(defaultRules[i], 30);
 
@@ -115,7 +136,7 @@ public class MyGUI {
                     for(int i = 0; i < inputs.length; i++) {
                         userRules.put(nonterminalNames[i], inputs[i].getText());
                     }
-                    grammar = new CFLGenerator(userRules);
+                    grammar.updateRules(userRules);
                 }
             }
         });
@@ -124,6 +145,30 @@ public class MyGUI {
         advanced.add(adv);
         frame.add(advanced, BorderLayout.PAGE_END);
 
+    }
+
+    // *************************************************
+    // FIELDS
+    // *************************************************
+
+    private JFrame frame;
+    private JPanel intro, activity, advanced;
+    private String userNouns, userVerbs, userPreps, userArticles;
+    private CFLGenerator grammar;
+
+
+    // *************************************************
+    // PUBLIC METHODS
+    // *************************************************
+
+    /**
+     *
+     * Main method to run the GUI
+     *
+     * @param args unused
+     */
+    public static void main(String[] args) {
+        new MyGUI();
     }
 
 }
